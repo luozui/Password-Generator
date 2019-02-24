@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Password Generator</title>
+    <style>body {width: 100%;height: 100%;background: linear-gradient(70deg, #045FB4, #01DFD7);}.main {position: absolute;margin: 10% auto;text-align: center;top: 0;left: 0;right: 0;bottom: 0;}h1 {font-size: 72px;color: azure;}input {/* background: transparent; */height: 30px;font-size: 26px;margin: 0px 5px 0px 5px;padding: 3.75px 7.5px;font-size: 1rem;font-weight: 400;line-height: 1.5;color: #495057;background-color: #fff;background-clip: padding-box;border: 1px solid #ced4da;border-radius: .25rem;/* box-shadow: 0 0 0 0.2rem #FE2E2E;  */transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;}.box {margin: 30px auto;width: 600px;}code {font-size: 28px;color: #fff;height: 30px;margin-left: 2px;margin-right: 2px;font-family: Consolas,Monaco,monospace;}</style>
+</head>
+
+<body>
+    <div class="main">
+        <h1>Password Generator</h1>
+        <div class="box">
+            <input name="base" id="base" placeholder="base" style="width: 150px;" onkeyup="work()" />
+            <input name="keyword" id="keyword" placeholder="keyword" style="width: 300px;" onkeyup="work()" />
+        </div>
+        <div class="box">
+            <code id = "Password0"></code>
+            <code id = "Password1"></code>
+            <code id = "Password2"></code>
+            <code id = "Password3"></code>
+            <br/>
+            <code id = "Password4"></code>
+            <code id = "Password5"></code>
+            <code id = "Password6"></code>
+            <code id = "Password7"></code>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/js-sha512/0.8.0/sha512.js"></script>
+    <script type="text/javascript">
+        function shaTochar(SHA) {
+            var arr = new Array();
+            for (i = 0; i < 64; ++i) arr[i] = 0.0;
+            var bits = "0123456789abcdef";
+            for (i = 0; i < 128; ++i) for (j = 0; j < 16; ++j) if (bits[j] == SHA[i])
+                arr[i >> 1] = arr[i >> 1] * 16.0 + j;
+            var str = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789";
+            var res = "";
+            for (i = 0; i < 64; ++i) {
+                res += str[Math.ceil(arr[i] / 256.0 * 62.0)];
+            }
+            return res;
+        }
+        function work() {
+            var base = document.getElementById("base").value;
+            var keyw = document.getElementById("keyword").value;
+            if (base.length && keyw.length) {
+                var pass = sha512(sha512(sha512(base).substr(0, 60) + "@" + sha512(keyw).substr(64, 60) + '.').substr(0, 100));
+                pass = shaTochar(pass).substr(0, 64);
+                for(i = 0; i < 8; ++i) {
+                    var name_id = "Password" + i.toString();
+                    document.getElementById(name_id).innerText = pass.substr(i<<3, 8);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
